@@ -18,3 +18,6 @@ optional arguments:
 ```
 python xmind2excel.py -i testcase.xmind -o test.xlsx -u 小明
 ```
+
+# 注意事项：
+xmind模板文件必须使用xmind8工具来编辑，否则可能会出现解析乱码
