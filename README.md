@@ -6,7 +6,7 @@ xmind8下载地址：https://xmind.app/download/xmind8/
 
 # 2.安装
 ```shell
-cd e2m_package
+cd xmind2excel
 pip install .
 ```
 
