@@ -3,6 +3,7 @@ import xmind
 import xlsxwriter
 from datetime import datetime
 
+
 sub_titles = [
     '用例编号',
     '所属产品',
@@ -34,8 +35,8 @@ sub_titles = [
 ]
 
 
-def parse_xmind(xmind_file):
-    workbook = xmind.load(xmind_file)
+def parse_xmind(xmind_path):
+    workbook = xmind.load(xmind_path)
     sheet = workbook.getPrimarySheet()
     root_topic = sheet.getRootTopic()
     root_title = root_topic.getTitle()
@@ -57,7 +58,7 @@ def parse_xmind(xmind_file):
                         "最后修改者": "",
                         "修改日期": datetime.strftime(datetime.now(), "%Y-%m-%d"),
                     }
-                    for d in test_case_topic.getSubTopics():
+                    for d in test_case_topic.getSubTopics() or []:
                         if d:
                             d_title = d.getTitle()
                             # 处理"步骤和预期"

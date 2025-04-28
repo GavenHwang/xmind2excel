@@ -4,6 +4,12 @@ import pandas
 import shutil
 import rarfile
 import zipfile
+import warnings
+from xmind.core.markerref import MarkerId
+
+# 屏蔽特定的 UserWarning
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl.worksheet._reader",
+                        message="Data Validation extension is not supported and will be removed")
 
 
 def extract(d_path, f_path, mode="zip"):
@@ -75,7 +81,7 @@ def aftertreatment(path):
         os.mkdir(inf_folder)
 
     extract(unzip_path, os.path.join(folder, zip_name))
-    shutil.copyfile("./META-INF/manifest.xml", os.path.join(inf_folder, "manifest.xml"))
+    shutil.copyfile(f"{os.path.dirname(__file__)}/META-INF/manifest.xml", os.path.join(inf_folder, "manifest.xml"))
     os.remove(os.path.join(folder, zip_name))
     shutil.make_archive(unzip_path, 'zip', unzip_path)
     file_path = unzip_path + '.zip'
@@ -88,7 +94,7 @@ def aftertreatment(path):
 def excel_to_xmind(excel_path, xmind_path):
     # 读取Excel文件
     df = pandas.read_excel(excel_path, sheet_name="用例")
-    workbook = xmind.load("./templ/testcase.xmind")
+    workbook = xmind.load(f"{os.path.dirname(__file__)}/templ/testcase.xmind")
     sheet = workbook.getPrimarySheet()
     root_topic = sheet.getRootTopic()
     root_topic.setTitle(df["所属产品"].values[0])
@@ -104,7 +110,11 @@ def excel_to_xmind(excel_path, xmind_path):
             model_topic = model_topics[row['所属模块']]
         case_topic = model_topic.addSubTopic()
         case_topic.setTitle(row['用例标题'])
-        case_topic.addMarker(f"priority-{row['优先级']}")
+        priority = str(row['优先级']).strip().split(".")[0]
+        if priority in ["1", "2", "3", "4"]:
+            case_topic.addMarker(MarkerId(f"priority-" + priority))
+        else:
+            case_topic.addMarker(MarkerId(f"priority-3"))
 
         # 添加基本属性
         props = {
