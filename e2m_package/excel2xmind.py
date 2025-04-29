@@ -118,10 +118,10 @@ def excel_to_xmind(excel_path, xmind_path):
 
         # 添加基本属性
         props = {
-            "相关需求": row["相关需求"],
-            "分支": row["分支"],
-            "用例类型": row["用例类型"],
-            "适用阶段": row["适用阶段"],
+            "相关需求": row["相关需求"] if pandas.notna(row["相关需求"]) else "无",
+            "分支": row["分支"] if pandas.notna(row["分支"]) else "所有分支(#0)",
+            "用例类型": row["用例类型"] if pandas.notna(row["用例类型"]) else "功能测试",
+            "适用阶段": row["适用阶段"] if pandas.notna(row["适用阶段"]) else "系统测试阶段",
             "前置条件": row["前置条件"] if pandas.notna(row["前置条件"]) else "无",
         }
         for k, v in props.items():
